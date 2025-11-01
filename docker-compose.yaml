@@ -1,0 +1,34 @@
+# Docker Compose-fil för ComfyUI med SAGE
+services:
+  comfyui:
+    user: "1000:1000"
+    # Bygg från Dockerfile i den aktuella katalogen
+    image: comfyui-sage:local
+    # Sätt ett vänligt namn på containern
+    container_name: comfyui-sage
+    # Portmappning: <värd-port>:<container-port>
+    ports:
+      - "8188:8188"
+
+    volumes:
+      - /mnt/media/gemensam/AI/ComfyUI/models:/opt/app/ComfyUI/models
+      - /home/thhel/comfy/output:/opt/app/ComfyUI/output
+      - /home/thhel/comfy/input:/opt/app/ComfyUI/input
+      - /home/thhel/comfy/user:/opt/app/ComfyUI/user
+      - /home/thhel/comfy/custom_nodes:/opt/app/ComfyUI/custom_nodes # Mappa en lokal custom_nodes om du vill hantera dem utanför imagen
+
+    # GPU-konfiguration
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all # Begär 1 GPU
+              capabilities: [gpu] # Begär standard GPU-kapacitet
+
+    # Håll containern igång (bra för interaktivitet och felsökning)
+    stdin_open: true
+    tty: true
+
+    # Starta om automatiskt om den kraschar
+    restart: no #unless-stopped
