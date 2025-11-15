@@ -31,4 +31,4 @@ services:
     tty: true
 
     # Starta om automatiskt om den kraschar
-    restart: no #unless-stopped
+    restart: unless-stopped

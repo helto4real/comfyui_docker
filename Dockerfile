@@ -2,7 +2,7 @@
 FROM nvidia/cuda:12.9.1-cudnn-devel-ubuntu24.04
 ARG BASE_DOCKER_FROM=nvidia/cuda:12.9.1-cudnn-devel-ubuntu24.04
 
-WORKDIR /opt
+# WORKDIR /opt
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Stockholm
@@ -12,11 +12,6 @@ RUN apt-get update -y --fix-missing\
   apt-utils \
   locales \
   ca-certificates \
-  && apt-get upgrade -y \
-  && apt-get clean
-
-# Install needed packages
-RUN apt-get update -y --fix-missing \
   && apt-get upgrade -y \
   && apt-get install -y \
   build-essential \
@@ -47,6 +42,7 @@ RUN apt-get update -y --fix-missing \
   && apt-get clean
 
 
+
 # Add libEGL ICD loaders and libraries + Vulkan ICD loaders and libraries
 # Per https://github.com/mmartial/ComfyUI-Nvidia-Docker/issues/26
 RUN apt install -y libglvnd0 libglvnd-dev libegl1-mesa-dev libvulkan1 libvulkan-dev ffmpeg \
@@ -55,7 +51,9 @@ RUN apt install -y libglvnd0 libglvnd-dev libegl1-mesa-dev libvulkan1 libvulkan-
   && mkdir -p /usr/share/glvnd/egl_vendor.d \
   && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libEGL_nvidia.so.0"}}' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json \
   && mkdir -p /usr/share/vulkan/icd.d \
-  && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libGLX_nvidia.so.0","api_version":"1.3"}}' > /usr/share/vulkan/icd.d/nvidia_icd.json
+  && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libGLX_nvidia.so.0","api_version":"1.3"}}' > /usr/share/vulkan/icd.d/nvidia_icd.json \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV MESA_D3D12_DEFAULT_ADAPTER_NAME="NVIDIA"
 
@@ -101,8 +99,9 @@ RUN eval "$(pyenv init -)"
 
 # make ~/.local/bin available on the PATH so scripts like tqdm, torchrun, etc. are found
 # ENV PATH=/home/appuser/.local/bin:$PATH
-RUN sudo mkdir -p /opt/app && sudo chown ubuntu /opt/app && cd /opt/app
 WORKDIR /opt/app
+
+RUN sudo mkdir -p /opt/app && sudo chown ubuntu /opt/app && cd /opt/app
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 WORKDIR /opt/app/ComfyUI
 
@@ -119,7 +118,8 @@ RUN pip install --no-cache-dir sageattention==2.2.0 --no-build-isolation
 # RUN pip cache purge
 
 # Copy the comfyui-init.bash script
-COPY --chmod=555 ./comfyui-init.bash /comfyui-init.bash
+COPY comfyui-init.bash /comfyui-init.bash
+RUN sudo chown ubuntu /comfyui-init.bash && chmod +x /comfyui-init.bash
 
 # Expose the port that ComfyUI will use
 EXPOSE 8188
