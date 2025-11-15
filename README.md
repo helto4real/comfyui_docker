@@ -1,5 +1,9 @@
+# The ComfyUI docker image with Sage integration
+
+This repository contains a Dockerfile to build a ComfyUI image with Sage integration for ComfyUI.
+
 # Build the image
-Make sure you have the docker runtime as default. And isntalled nvidia docker toolkit.
+Make sure you have the docker runtime as default. And installed nvidia docker toolkit.
 
 The file `/etc/docker/daemon.json`
 
