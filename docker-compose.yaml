@@ -1,6 +1,6 @@
 # Docker Compose-fil för ComfyUI med SAGE
 services:
-  comfyui:
+  comfyui-sage:
     user: "1000:1000"
     # Bygg från Dockerfile i den aktuella katalogen
     image: comfyui-sage:local

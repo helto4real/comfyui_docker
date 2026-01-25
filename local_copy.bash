@@ -20,4 +20,8 @@ echo "Starting ComfyUI initialization..."
 #
 # fi
 
-python3 main.py --use-sage-attention --listen "0.0.0.0" --enable-manager
+echo "This is the new file"
+#python3 main.py --use-sage-attention --fast --reserve-vram 1.0 --listen "0.0.0.0" --lowvram --cache-none --reserve-vram 4
+python3 main.py --use-sage-attention --fast --reserve-vram 1.0 --listen "0.0.0.0"
+# python3 main.py --fast --reserve-vram 1.0 --listen "0.0.0.0"
+#python3 main.py --use-sage-attention --fast --reserve-vram 1.0 --listen "0.0.0.0" --enable-manager

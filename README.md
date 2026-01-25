@@ -24,3 +24,9 @@ The file `/etc/docker/daemon.json`
 DOCKER_BUILDKIT=0 docker build -t comfyui-sage:local .
 ```
 
+If you need to install all the optional dependencies. In custom nodes folder do:
+
+```bash
+find . -name "requirements.txt" -exec pip install -r {} \;
+```
+```

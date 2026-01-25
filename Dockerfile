@@ -45,16 +45,25 @@ RUN apt-get update -y --fix-missing\
 
 # Add libEGL ICD loaders and libraries + Vulkan ICD loaders and libraries
 # Per https://github.com/mmartial/ComfyUI-Nvidia-Docker/issues/26
-RUN apt install -y libglvnd0 libglvnd-dev libegl1-mesa-dev libvulkan1 libvulkan-dev ffmpeg \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /usr/share/glvnd/egl_vendor.d \
-  && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libEGL_nvidia.so.0"}}' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json \
-  && mkdir -p /usr/share/vulkan/icd.d \
-  && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libGLX_nvidia.so.0","api_version":"1.3"}}' > /usr/share/vulkan/icd.d/nvidia_icd.json \
+# RUN apt install -y libglvnd0 libglvnd-dev libegl1-mesa-dev libvulkan1 libvulkan-dev ffmpeg \
+#   && apt-get clean \
+#   && rm -rf /var/lib/apt/lists/* \
+#   && mkdir -p /usr/share/glvnd/egl_vendor.d \
+#   && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libEGL_nvidia.so.0"}}' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json \
+#   && mkdir -p /usr/share/vulkan/icd.d \
+#   && echo '{"file_format_version":"1.0.0","ICD":{"library_path":"libGLX_nvidia.so.0","api_version":"1.3"}}' > /usr/share/vulkan/icd.d/nvidia_icd.json \
+#   && apt-get clean \
+#   && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt install -y \
+  libglvnd0 \
+  libglvnd-dev \
+  libegl1-mesa-dev \
+  libvulkan1 \
+  libvulkan-dev \
+  ffmpeg \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
-
 ENV MESA_D3D12_DEFAULT_ADAPTER_NAME="NVIDIA"
 
 ENV BUILD_FILE="/etc/image_base.txt"
@@ -112,10 +121,15 @@ RUN pyenv virtualenv comfy \
 RUN pip install --no-cache-dir -r requirements.txt
 
 # RUN pip install --no-cache-dir triton --no-build-isolation
-RUN pip install --no-cache-dir sageattention==2.2.0 --no-build-isolation
+# RUN pip install --no-cache-dir sageattention==2.2.0 --no-build-isolation
 
 # (Optional) Clean up pip cache to reduce image size
 # RUN pip cache purge
+RUN git clone https://github.com/thu-ml/SageAttention.git \
+  && cd SageAttention \
+  && export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 \
+  && python setup.py install  # or pip install -e . \
+  && cd ..
 
 # Copy the comfyui-init.bash script
 COPY comfyui-init.bash /comfyui-init.bash
