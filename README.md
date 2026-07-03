@@ -30,3 +30,8 @@ If you need to install all the optional dependencies. In custom nodes folder do:
 find . -name "requirements.txt" -exec pip install -r {} \;
 ```
 ```
+
+## if I screw up
+```
+docker cp <containerId>:/app/ComfyUI/ComfyUI.py ./ComfyUI.py
+```

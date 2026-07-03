@@ -20,4 +20,4 @@ echo "Starting ComfyUI initialization..."
 #
 # fi
 
-python3 main.py --use-sage-attention --listen "0.0.0.0" --enable-manager
+python3 main.py --listen "0.0.0.0"

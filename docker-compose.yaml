@@ -15,7 +15,7 @@ services:
       - /home/thhel/comfy/output:/opt/app/ComfyUI/output
       - /home/thhel/comfy/input:/opt/app/ComfyUI/input
       - /home/thhel/comfy/user:/opt/app/ComfyUI/user
-      - /home/thhel/comfy/custom_nodes:/opt/app/ComfyUI/custom_nodes # Mappa en lokal custom_nodes om du vill hantera dem utanför imagen
+      - /home/thhel/comfy/custom_nodes_new:/opt/app/ComfyUI/custom_nodes # Mappa en lokal custom_nodes om du vill hantera dem utanför imagen
 
     # GPU-konfiguration
     deploy:

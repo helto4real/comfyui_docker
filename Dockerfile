@@ -27,6 +27,7 @@ RUN apt-get update -y --fix-missing\
   python3-pip \
   python3-venv \
   git \
+  vim \
   sudo \
   libglib2.0-0 \
   socat \
